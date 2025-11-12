@@ -11,16 +11,34 @@ pipeline {
                 git 'https://github.com/cloudvaishu/node-hello-world.git'
             }
         }
+
+        stage('Debug Node') {
+            steps {
+                sh '''
+                    echo "🔍 Verifying Node.js and npm setup..."
+                    node -v
+                    npm -v
+                    echo "📁 Listing files in workspace:"
+                    ls -l
+                    echo "📄 Showing contents of app.js:"
+                    cat app.js
+                '''
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
             }
         }
+
         stage('Run App') {
             steps {
                 sh '''
+                    echo "🚀 Starting Node.js app..."
                     nohup npm start > app.log 2>&1 &
                     sleep 5
+                    echo "📄 Last 10 lines of app.log:"
                     tail -n 10 app.log
                 '''
             }
